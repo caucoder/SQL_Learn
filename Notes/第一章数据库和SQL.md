@@ -9,7 +9,7 @@ tom tom shop
 1. 数据库： 数据集合
 
 
-## DDL
+## 1-DDL
 
 对数据库和表进行创建，删除，修改
 
@@ -20,7 +20,7 @@ tom tom shop
 > 列名 数据类型  约束
 
 
-## DML
+## 2-DML
 
 ### SELECT 
 
@@ -122,3 +122,73 @@ SELECT product_name, product_type, sale_price
 - （括号）强化处理
 
 
+
+## 3-聚合
+
+### 3-1 COUNT
+
+COUNT函数的结果根据参数的不同而不同。COUNT(*)会得到包含NULL的数据
+行数，而COUNT(<列名>)会得到NULL之外的数据行数。
+
+
+```sql
+select count(*),count(purchase_price) from product;
+ count | count
+-------+-------
+     8 |     6
+```
+
+
+> 想要计算值的种类时，可以在COUNT函数的参数中使用DISTINCT。
+
+```sql
+SELECT COUNT(DISTINCT product_type)
+ FROM Product;
+```
+
+**DISTINCT会删除重复数据行**
+
+
+### 3-2 SUM
+
+聚合函数会将NULL排除在外。但COUNT(*)例外，并不会排除NULL
+
+
+- AVG
+- MAX
+- MIN
+
+
+### GROUP BY
+
+> 先把表分成几组，然后再进行汇总处理
+
+```sql
+SELECT product_type, COUNT(*)
+ FROM Product
+ GROUP BY product_type;
+```
+
+- 对字段进行分组，然后显示该字段，并该字段进行操作。
+- GROUP BY就像是切分表的一把刀
+- GROUP BY后面的字段为聚合键 （聚合键中包含NULL时，在结果中会以“不确定”行（空行）的形式表现出来）
+- 使用 WHERE 子句进行汇总处理时，会先根据 WHERE 子句指
+定的条件进行过滤，然后再进行汇总处理
+
+> 目前子句的顺序： 1. SELECT → 2. FROM → 3. WHERE → 4. GROUP BY
+
+**使用GROUP BY需要注意的事项**
+
+SELECT 子句中只能存在一下三种元素：
+1. 常数
+2. 聚合函数
+3. GROUP BY子句中指定的列名（即聚合键）
+
+> 把聚合键之外的列名书写在 SELECT 子
+句之中,会报错。
+
+> 在GROUP BY子句中不能使用SELECT子句中定义的别名
+
+
+
+> 只有SELECT子句和HAVING子句（以及ORDER BY子句）中能够使用聚合函数。如： where就不能使用聚合函数
